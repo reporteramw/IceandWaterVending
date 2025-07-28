@@ -1,38 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vending</title>
-    <!-- Tailwind CSS CDN สำหรับการจัดสไตล์พื้นฐาน -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>AMW Ice and Water Vending</title>
+    <link rel="icon" type="image/x-icon" href="https://img5.pic.in.th/file/secure-sv1/PP489c54a4cbfd71b0.png">
     <style>
         body {
-            font-family: 'Inter', sans-serif; /* ใช้ฟอนต์ Inter */
             margin: 0;
             padding: 0;
-            overflow: hidden; /* ป้องกัน scrollbar ของหน้าหลัก */
+            overflow: hidden; /* Prevent scrollbars on the main page */
+            height: 100vh; /* Ensure body takes full viewport height */
+            width: 100vw; /* Ensure body takes full viewport width */
         }
-        /* สไตล์สำหรับ iframe เพื่อให้แสดงผลเต็มหน้าจอ */
-        .full-screen-iframe {
-            position: absolute; /* จัดตำแหน่งแบบสัมบูรณ์ */
-            top: 0;
-            left: 0;
+        /* Style for the iframe to ensure it fills the parent container */
+        #myWebAppIframe {
+            display: block; /* Remove extra space below iframe */
             width: 100%;
             height: 100%;
-            border: 0; /* ไม่มีเส้นขอบ */
+            border: 0; /* Remove default iframe border */
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <!-- iframe สำหรับฝัง Google Apps Script Web App -->
+<body>
+    <!-- Iframe to embed the Google Apps Script Web App -->
     <iframe
-        class="full-screen-iframe rounded-lg shadow-lg"
+        id="myWebAppIframe"
         src="https://script.google.com/macros/s/AKfycbwUMyOpIw6nY9vtTNXfYW-cW38fxQLrmh1jjlQHLbvt7wnou1wtqOkqs16vmpbz2x4PQg/exec"
-        title="Google Apps Script Web App"
+        title="AMW Ice and Water Vending Web App"
+        frameborder="0"
     >
-        <!-- ข้อความสำรองหากเบราว์เซอร์ไม่รองรับ iframe -->
-        <p>เบราว์เซอร์ของคุณไม่รองรับ iframe กรุณาเข้าชม <a href="https://script.google.com/macros/s/AKfycbyDeQHmC9kXsJNYh0zhTTVTV-J8ecq7hQBuNqTCQuntwqST-nZpNS0NkLfZjICVzKeqnA/exec" target="_blank">เว็บแอปโดยตรงที่นี่</a></p>
+        <!-- Fallback message if the browser does not support iframes -->
+        <p>เบราว์เซอร์ของคุณไม่รองรับ iframe หรือไม่สามารถโหลดเว็บแอปได้ กรุณาเข้าชม <a href="https://script.google.com/macros/s/AKfycbwUMyOpIw6nY9vtTNXfYW-cW38fxQLrmh1jjlQHLbvt7wnou1wtqOkqs16vmpbz2x4PQg/exec" target="_blank">เว็บแอป Amw Ice and Water Vending โดยตรงที่นี่</a></p>
     </iframe>
+
+    <script>
+        const iframe = document.getElementById('myWebAppIframe');
+        const refreshInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+        // Function to refresh the iframe
+        function refreshIframe() {
+            // Reload the iframe by setting its src to the current value
+            // This effectively reloads the content within the iframe
+            iframe.src = iframe.src;
+            console.log('Web app refreshed at:', new Date().toLocaleTimeString());
+        }
+
+        // Start the automatic refresh interval when the window loads
+        window.onload = function() {
+            setInterval(refreshIframe, refreshInterval);
+            console.log('Automatic refresh set for every 5 minutes.');
+        };
+
+        // IMPORTANT: If you encounter "script.google.com ปฏิเสธการเชื่อมต่อ" (X-Frame-Options)
+        // You must modify your Google Apps Script's doGet(e) function to allow embedding:
+        // For example:
+        // function doGet(e) {
+        //   return HtmlService.createHtmlOutputFromFile('YourHtmlFileName')
+        //       .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
+        // }
+    </script>
 </body>
 </html>
